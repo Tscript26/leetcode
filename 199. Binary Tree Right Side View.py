@@ -19,6 +19,28 @@ from src import *
 
 
 class Solution:
+    def rightSideView(self, root: TreeNode) -> List[int]:
+        rightmost_value_at_depth = dict() # 深度为索引，存放节点的值
+        max_depth = -1
+
+        stack = [(root, 0)]
+        while stack:
+            node, depth = stack.pop()
+
+            if node is not None:
+                # 维护二叉树的最大深度
+                max_depth = max(max_depth, depth)
+
+                # 如果不存在对应深度的节点我们才插入
+                rightmost_value_at_depth.setdefault(depth, node.val)
+
+                stack.append((node.left, depth + 1))
+                stack.append((node.right, depth + 1))
+
+        return [rightmost_value_at_depth[depth] for depth in range(max_depth + 1)]
+
+
+
 
     def rightSideView2(self, root: TreeNode) -> List[int]:
         """
@@ -52,7 +74,7 @@ class Solution:
 
 if __name__ == '__main__':
     S = Solution()
-    b = TreeNode.build([1, 2, 7, 4, None, 6, None])
+    b = TreeNode.build([1, 2, 3, 4])
     # print(b.bfs())
     res = S.rightSideView(b)
     print(res)
