@@ -1,3 +1,7 @@
+from collections import deque
+from copy import copy
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -5,24 +9,31 @@ class TreeNode:
         self.right = right
 
     @staticmethod
-    def build(nodes):
+    def build(ns):
+        nodes = copy(ns)
         if not nodes:
             return None
-        root = TreeNode(nodes.pop(0))
-        pre = [root]
-        now = []
-        nxt = []
+        head = TreeNode(nodes.pop(0))
+        stack = [head]
+        no_left = False
         while nodes:
-            while pre:
-                node = pre.pop(0)
-                if nodes:
-                    node.left = TreeNode(nodes.pop(0))
-                    nxt.append(node.left)
-                if nodes:
-                    node.right = TreeNode(nodes.pop(0))
-                    nxt.append(node.right)
-            pre = nxt
-        return root
+            now = stack.pop(0)
+            nxt = nodes.pop(0)
+            if not now:
+                nodes.pop(0)
+                continue
+            if not now.left and not no_left:
+                if nxt is None:
+                    no_left = True
+                now.left = TreeNode(nxt) if nxt is not None else None
+                stack.append(now)
+                stack.append(now.left)
+                continue
+            if not now.right:
+                now.right = TreeNode(nxt)
+                stack.append(now.right)
+            no_left = False
+        return head
 
     def bfs(self):
         def parse(nodes):
@@ -40,6 +51,7 @@ class TreeNode:
                 nxt.append(node.right or None)
             now.extend(parse(nxt))
             return now
+
         result = [self.val]
         result.extend(parse([self.left, self.right]))
         return result
