@@ -108,9 +108,9 @@ class Solution:
                         else:
                             lo = hi = x
                     ans = 1 + min(max(dp(k - 1, x -1), dp(k, n - x))for x in (lo, hi))
-                return ans
+                memo[k, n] = ans
             return memo[k, n]
-
+        return dp(k,n)
 
 if __name__ == '__main__':
     S = Solution()
