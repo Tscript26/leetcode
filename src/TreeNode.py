@@ -111,3 +111,17 @@ class ListNode:
         self.val = val
         self.next = next
 
+    def build(self, vals):
+        now = None
+        while vals:
+            now = ListNode(vals.pop(), now)
+        self.val = now.val
+        self.next = now.next
+
+    def __str__(self):
+        stack = [self.val]
+        tmp = self.next
+        while tmp:
+            stack.append(tmp.val)
+            tmp = tmp.next
+        return str(stack)
